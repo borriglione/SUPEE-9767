@@ -157,14 +157,14 @@ echo -e "$APPLIED_REVERTED_PATCH_INFO\n$PATCH_APPLY_REVERT_RESULT\n\n" >> "$APPL
 exit 0
 
 
-PATCH_SUPEE-9767_CE_1.7.0.2_v1.sh | CE_1.7.0.2 | v1 | 226caf7 | Mon Feb 20 17:33:39 2017 +0200 | 2321b14
+PATCH_SUPEE-9767_CE_1.7.0.2_v2 | CE_1.7.0.2 | v2 | 6566db274beaeb9bcdb56a62e02cc2da532e618c | Thu Jun 22 04:30:03 2017 +0300 | v1.14.3.3..HEAD
 
 __PATCHFILE_FOLLOWS__
 diff --git app/code/core/Mage/Admin/Model/Session.php app/code/core/Mage/Admin/Model/Session.php
 index 5fd6f4c..d78495b 100644
 --- app/code/core/Mage/Admin/Model/Session.php
 +++ app/code/core/Mage/Admin/Model/Session.php
-@@ -138,6 +138,9 @@ public function login($username, $password, $request = null)
+@@ -138,6 +138,9 @@ class Mage_Admin_Model_Session extends Mage_Core_Model_Session_Abstract
                  Mage::throwException(Mage::helper('adminhtml')->__('Invalid User Name or Password.'));
              }
          } catch (Mage_Core_Exception $e) {
@@ -278,7 +278,7 @@ diff --git app/code/core/Mage/Adminhtml/Block/Widget/Grid/Column/Filter/Date.php
 index a25fedd..692f4c3 100644
 --- app/code/core/Mage/Adminhtml/Block/Widget/Grid/Column/Filter/Date.php
 +++ app/code/core/Mage/Adminhtml/Block/Widget/Grid/Column/Filter/Date.php
-@@ -137,11 +137,11 @@ public function setValue($value)
+@@ -137,11 +137,11 @@ class Mage_Adminhtml_Block_Widget_Grid_Column_Filter_Date extends Mage_Adminhtml
          if (isset($value['locale'])) {
              if (!empty($value['from'])) {
                  $value['orig_from'] = $value['from'];
@@ -296,7 +296,7 @@ diff --git app/code/core/Mage/Adminhtml/Model/Config/Data.php app/code/core/Mage
 index 749ee52..b6c0450 100644
 --- app/code/core/Mage/Adminhtml/Model/Config/Data.php
 +++ app/code/core/Mage/Adminhtml/Model/Config/Data.php
-@@ -167,6 +167,9 @@ public function save()
+@@ -167,6 +167,9 @@ class Mage_Adminhtml_Model_Config_Data extends Varien_Object
                  if (is_object($fieldConfig)) {
                      $configPath = (string)$fieldConfig->config_path;
                      if (!empty($configPath) && strrpos($configPath, '/') > 0) {
@@ -306,11 +306,61 @@ index 749ee52..b6c0450 100644
                          // Extend old data with specified section group
                          $groupPath = substr($configPath, 0, strrpos($configPath, '/'));
                          if (!isset($oldConfigAdditionalGroups[$groupPath])) {
+diff --git app/code/core/Mage/Adminhtml/Model/System/Config/Backend/Symlink.php app/code/core/Mage/Adminhtml/Model/System/Config/Backend/Symlink.php
+new file mode 100644
+index 0000000..a54eb4d
+--- /dev/null
++++ app/code/core/Mage/Adminhtml/Model/System/Config/Backend/Symlink.php
+@@ -0,0 +1,44 @@
++<?php
++/**
++ * Magento
++ *
++ * NOTICE OF LICENSE
++ *
++ * This source file is subject to the Open Software License (OSL 3.0)
++ * that is bundled with this package in the file LICENSE.txt.
++ * It is also available through the world-wide-web at this URL:
++ * http://opensource.org/licenses/osl-3.0.php
++ * If you did not receive a copy of the license and are unable to
++ * obtain it through the world-wide-web, please send an email
++ * to license@magentocommerce.com so we can send you a copy immediately.
++ *
++ * DISCLAIMER
++ *
++ * Do not edit or add to this file if you wish to upgrade Magento to newer
++ * versions in the future. If you wish to customize Magento for your
++ * needs please refer to http://www.magentocommerce.com for more information.
++ *
++ * @category    Mage
++ * @package     Mage_Adminhtml
++ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
++ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
++ */
++
++/**
++ * System config symlink backend model
++ *
++ * @category Mage
++ * @package  Mage_Adminhtml
++ */
++class Mage_Adminhtml_Model_System_Config_Backend_Symlink extends Mage_Core_Model_Config_Data
++{
++    /**
++     * Save object data
++     *
++     * @return Mage_Core_Model_Abstract
++     */
++    public function save()
++    {
++        return $this;
++    }
++}
 diff --git app/code/core/Mage/Adminhtml/controllers/Catalog/Product/GalleryController.php app/code/core/Mage/Adminhtml/controllers/Catalog/Product/GalleryController.php
 index 186d4b7..4311408 100644
 --- app/code/core/Mage/Adminhtml/controllers/Catalog/Product/GalleryController.php
 +++ app/code/core/Mage/Adminhtml/controllers/Catalog/Product/GalleryController.php
-@@ -42,6 +42,11 @@ public function uploadAction()
+@@ -42,6 +42,11 @@ class Mage_Adminhtml_Catalog_Product_GalleryController extends Mage_Adminhtml_Co
                  Mage::helper('catalog/image'), 'validateUploadFile');
              $uploader->setAllowRenameFiles(true);
              $uploader->setFilesDispersion(true);
@@ -326,7 +376,7 @@ diff --git app/code/core/Mage/Checkout/controllers/MultishippingController.php a
 index fb370f2..79ebf1d 100644
 --- app/code/core/Mage/Checkout/controllers/MultishippingController.php
 +++ app/code/core/Mage/Checkout/controllers/MultishippingController.php
-@@ -233,6 +233,12 @@ public function addressesPostAction()
+@@ -233,6 +233,12 @@ class Mage_Checkout_MultishippingController extends Mage_Checkout_Controller_Act
              $this->_redirect('*/multishipping_address/newShipping');
              return;
          }
@@ -339,7 +389,7 @@ index fb370f2..79ebf1d 100644
          try {
              if ($this->getRequest()->getParam('continue', false)) {
                  $this->_getCheckout()->setCollectRatesFlag(true);
-@@ -339,6 +345,11 @@ public function backToShippingAction()
+@@ -339,6 +345,11 @@ class Mage_Checkout_MultishippingController extends Mage_Checkout_Controller_Act
  
      public function shippingPostAction()
      {
@@ -351,7 +401,7 @@ index fb370f2..79ebf1d 100644
          $shippingMethods = $this->getRequest()->getPost('shipping_method');
          try {
              Mage::dispatchEvent(
-@@ -442,6 +453,11 @@ public function overviewAction()
+@@ -442,6 +453,11 @@ class Mage_Checkout_MultishippingController extends Mage_Checkout_Controller_Act
              return $this;
          }
  
@@ -364,22 +414,18 @@ index fb370f2..79ebf1d 100644
  
          try {
 diff --git app/code/core/Mage/Checkout/controllers/OnepageController.php app/code/core/Mage/Checkout/controllers/OnepageController.php
-index 55d0833..09c517c 100644
+index 55d0833..9185dc3 100644
 --- app/code/core/Mage/Checkout/controllers/OnepageController.php
 +++ app/code/core/Mage/Checkout/controllers/OnepageController.php
-@@ -327,6 +327,11 @@ public function saveMethodAction()
+@@ -327,6 +327,7 @@ class Mage_Checkout_OnepageController extends Mage_Checkout_Controller_Action
          if ($this->_expireAjax()) {
              return;
          }
 +
-+        if ($this->isFormkeyValidationOnCheckoutEnabled() && !$this->_validateFormKey()) {
-+            return;
-+        }
-+
          if ($this->getRequest()->isPost()) {
              $method = $this->getRequest()->getPost('method');
              $result = $this->getOnepage()->saveCheckoutMethod($method);
-@@ -342,6 +347,11 @@ public function saveBillingAction()
+@@ -342,6 +343,11 @@ class Mage_Checkout_OnepageController extends Mage_Checkout_Controller_Action
          if ($this->_expireAjax()) {
              return;
          }
@@ -391,7 +437,7 @@ index 55d0833..09c517c 100644
          if ($this->getRequest()->isPost()) {
  //            $postData = $this->getRequest()->getPost('billing', array());
  //            $data = $this->_filterPostData($postData);
-@@ -387,6 +397,11 @@ public function saveShippingAction()
+@@ -387,6 +393,11 @@ class Mage_Checkout_OnepageController extends Mage_Checkout_Controller_Action
          if ($this->_expireAjax()) {
              return;
          }
@@ -403,7 +449,7 @@ index 55d0833..09c517c 100644
          if ($this->getRequest()->isPost()) {
              $data = $this->getRequest()->getPost('shipping', array());
              $customerAddressId = $this->getRequest()->getPost('shipping_address_id', false);
-@@ -411,6 +426,11 @@ public function saveShippingMethodAction()
+@@ -411,6 +422,11 @@ class Mage_Checkout_OnepageController extends Mage_Checkout_Controller_Action
          if ($this->_expireAjax()) {
              return;
          }
@@ -415,7 +461,7 @@ index 55d0833..09c517c 100644
          if ($this->getRequest()->isPost()) {
              $data = $this->getRequest()->getPost('shipping_method', '');
              $result = $this->getOnepage()->saveShippingMethod($data);
-@@ -445,6 +465,11 @@ public function savePaymentAction()
+@@ -445,6 +461,11 @@ class Mage_Checkout_OnepageController extends Mage_Checkout_Controller_Action
          if ($this->_expireAjax()) {
              return;
          }
@@ -428,7 +474,7 @@ index 55d0833..09c517c 100644
              if (!$this->getRequest()->isPost()) {
                  $this->_ajaxRedirectResponse();
 diff --git app/code/core/Mage/Checkout/etc/system.xml app/code/core/Mage/Checkout/etc/system.xml
-index 7741532..62d1fe6 100644
+index 7741532..4761d20 100644
 --- app/code/core/Mage/Checkout/etc/system.xml
 +++ app/code/core/Mage/Checkout/etc/system.xml
 @@ -232,5 +232,23 @@
@@ -439,7 +485,7 @@ index 7741532..62d1fe6 100644
 +            <groups>
 +                <security>
 +                    <fields>
-+                        <validate_formkey_checkout translate="label">
++                        <validate_formkey_checkout translate="label comment">
 +                            <label>Enable Form Key Validation On Checkout</label>
 +                            <frontend_type>select</frontend_type>
 +                            <source_model>adminhtml/system_config_source_yesno</source_model>
@@ -459,7 +505,7 @@ diff --git app/code/core/Mage/Cms/Model/Wysiwyg/Images/Storage.php app/code/core
 index a8f0c52..808e5ce 100644
 --- app/code/core/Mage/Cms/Model/Wysiwyg/Images/Storage.php
 +++ app/code/core/Mage/Cms/Model/Wysiwyg/Images/Storage.php
-@@ -282,6 +282,11 @@ public function uploadFile($targetPath, $type = null)
+@@ -282,6 +282,11 @@ class Mage_Cms_Model_Wysiwyg_Images_Storage extends Varien_Object
          }
          $uploader->setAllowRenameFiles(true);
          $uploader->setFilesDispersion(false);
@@ -472,7 +518,7 @@ index a8f0c52..808e5ce 100644
  
          if (!$result) {
 diff --git app/code/core/Mage/Core/Controller/Front/Action.php app/code/core/Mage/Core/Controller/Front/Action.php
-index ba615cc..d3e5a34 100755
+index ba615cc..d97dc9f 100755
 --- app/code/core/Mage/Core/Controller/Front/Action.php
 +++ app/code/core/Mage/Core/Controller/Front/Action.php
 @@ -39,6 +39,11 @@ class Mage_Core_Controller_Front_Action extends Mage_Core_Controller_Varien_Acti
@@ -487,10 +533,34 @@ index ba615cc..d3e5a34 100755
       * Currently used area
       *
       * @var string
-@@ -159,4 +164,28 @@ protected function _prepareDownloadResponse($fileName, $content, $contentType =
+@@ -159,4 +164,38 @@ class Mage_Core_Controller_Front_Action extends Mage_Core_Controller_Varien_Acti
          }
          return $this;
      }
++
++    /**
++     * Validate Form Key
++     *
++     * @return bool
++     */
++    protected function _validateFormKey()
++    {
++        $validated = true;
++        if ($this->_isFormKeyEnabled()) {
++            $validated = parent::_validateFormKey();
++        }
++        return $validated;
++    }
++
++    /**
++     * Check if form key validation is enabled.
++     *
++     * @return bool
++     */
++    protected function _isFormKeyEnabled()
++    {
++        return Mage::getStoreConfigFlag(self::XML_CSRF_USE_FLAG_CONFIG_PATH);
++    }
 +
 +    /**
 +     * Check if form_key validation enabled on checkout process
@@ -501,26 +571,12 @@ index ba615cc..d3e5a34 100755
 +    {
 +        return Mage::getStoreConfigFlag('admin/security/validate_formkey_checkout');
 +    }
-+
-+    /**
-+     * Validate Form Key
-+     *
-+     * @return bool
-+     */
-+    protected function _validateFormKey()
-+    {
-+        $validated = true;
-+        if (Mage::getStoreConfigFlag(self::XML_CSRF_USE_FLAG_CONFIG_PATH)) {
-+            $validated = parent::_validateFormKey();
-+        }
-+        return $validated;
-+    }
  }
 diff --git app/code/core/Mage/Core/Controller/Request/Http.php app/code/core/Mage/Core/Controller/Request/Http.php
 index aa4dd8d..6536ebd 100644
 --- app/code/core/Mage/Core/Controller/Request/Http.php
 +++ app/code/core/Mage/Core/Controller/Request/Http.php
-@@ -148,7 +148,10 @@ public function setPathInfo($pathInfo = null)
+@@ -148,7 +148,10 @@ class Mage_Core_Controller_Request_Http extends Zend_Controller_Request_Http
              $baseUrl = $this->getBaseUrl();
              $pathInfo = substr($requestUri, strlen($baseUrl));
  
@@ -533,10 +589,10 @@ index aa4dd8d..6536ebd 100644
              } elseif (null === $baseUrl) {
                  $pathInfo = $requestUri;
 diff --git app/code/core/Mage/Core/Model/File/Validator/Image.php app/code/core/Mage/Core/Model/File/Validator/Image.php
-index 7f7b9d0..cbbcbb1 100644
+index 7f7b9d0..8618bca 100644
 --- app/code/core/Mage/Core/Model/File/Validator/Image.php
 +++ app/code/core/Mage/Core/Model/File/Validator/Image.php
-@@ -87,10 +87,33 @@ public function setAllowedImageTypes(array $imageFileExtensions = array())
+@@ -87,10 +87,51 @@ class Mage_Core_Model_File_Validator_Image
       */
      public function validate($filePath)
      {
@@ -551,9 +607,26 @@ index 7f7b9d0..cbbcbb1 100644
 +                $image = imagecreatefromstring(file_get_contents($filePath));
 +                if ($image !== false) {
 +                    $img = imagecreatetruecolor($imageWidth, $imageHeight);
++                    imagealphablending($img, false);
 +                    imagecopyresampled($img, $image, 0, 0, 0, 0, $imageWidth, $imageHeight, $imageWidth, $imageHeight);
++                    imagesavealpha($img, true);
++
 +                    switch ($fileType) {
 +                        case IMAGETYPE_GIF:
++                            $transparencyIndex = imagecolortransparent($image);
++                            if ($transparencyIndex >= 0) {
++                                imagecolortransparent($img, $transparencyIndex);
++                                for ($y = 0; $y < $imageHeight; ++$y) {
++                                    for ($x = 0; $x < $imageWidth; ++$x) {
++                                        if (((imagecolorat($img, $x, $y) >> 24) & 0x7F)) {
++                                            imagesetpixel($img, $x, $y, $transparencyIndex);
++                                        }
++                                    }
++                                }
++                            }
++                            if (!imageistruecolor($image)) {
++                                imagetruecolortopalette($img, false, imagecolorstotal($image));
++                            }
 +                            imagegif($img, $filePath);
 +                            break;
 +                        case IMAGETYPE_JPEG:
@@ -563,8 +636,9 @@ index 7f7b9d0..cbbcbb1 100644
 +                            imagepng($img, $filePath);
 +                            break;
 +                        default:
-+                            return;
++                            break;
 +                    }
++
 +                    imagedestroy($img);
 +                    imagedestroy($image);
 +                    return null;
@@ -574,16 +648,25 @@ index 7f7b9d0..cbbcbb1 100644
              }
          }
          throw Mage::exception('Mage_Core', Mage::helper('core')->__('Invalid MIME type.'));
-@@ -105,5 +128,4 @@ protected function isImageType($nImageType)
+@@ -105,5 +146,4 @@ class Mage_Core_Model_File_Validator_Image
      {
          return in_array($nImageType, $this->_allowedImageTypes);
      }
 -
  }
 diff --git app/code/core/Mage/Core/etc/config.xml app/code/core/Mage/Core/etc/config.xml
-index 0c80a9e..0dac38c 100644
+index 0c80a9e..843e634 100644
 --- app/code/core/Mage/Core/etc/config.xml
 +++ app/code/core/Mage/Core/etc/config.xml
+@@ -28,7 +28,7 @@
+ <config>
+     <modules>
+         <Mage_Core>
+-            <version>1.6.0.2</version>
++            <version>1.6.0.2.1.2</version>
+         </Mage_Core>
+     </modules>
+     <global>
 @@ -260,6 +260,9 @@
              </js>
          </dev>
@@ -595,7 +678,7 @@ index 0c80a9e..0dac38c 100644
                  <disable>0</disable>
                  <host>localhost</host>
 diff --git app/code/core/Mage/Core/etc/system.xml app/code/core/Mage/Core/etc/system.xml
-index 47b443e..894aff4 100644
+index 47b443e..be619ce 100644
 --- app/code/core/Mage/Core/etc/system.xml
 +++ app/code/core/Mage/Core/etc/system.xml
 @@ -41,6 +41,29 @@
@@ -609,8 +692,8 @@ index 47b443e..894aff4 100644
 +                    <frontend_type>text</frontend_type>
 +                    <sort_order>0</sort_order>
 +                    <show_in_default>1</show_in_default>
-+                    <show_in_website>1</show_in_website>
-+                    <show_in_store>1</show_in_store>
++                    <show_in_website>0</show_in_website>
++                    <show_in_store>0</show_in_store>
 +                    <fields>
 +                        <use_form_key translate="label">
 +                            <label>Add Secret Key To Url</label>
@@ -618,8 +701,8 @@ index 47b443e..894aff4 100644
 +                            <source_model>adminhtml/system_config_source_yesno</source_model>
 +                            <sort_order>10</sort_order>
 +                            <show_in_default>1</show_in_default>
-+                            <show_in_website>1</show_in_website>
-+                            <show_in_store>1</show_in_store>
++                            <show_in_website>0</show_in_website>
++                            <show_in_store>0</show_in_store>
 +                        </use_form_key>
 +                    </fields>
 +                </csrf>
@@ -628,64 +711,91 @@ index 47b443e..894aff4 100644
          <!--<web_track translate="label" module="core">
              <label>Web Tracking</label>
              <frontend_type>text</frontend_type>
-@@ -529,26 +552,6 @@
-                         </template_hints_blocks>
-                     </fields>
-                 </debug>
--                <template translate="label">
--                    <label>Template Settings</label>
--                    <frontend_type>text</frontend_type>
--                    <sort_order>25</sort_order>
+@@ -533,18 +556,19 @@
+                     <label>Template Settings</label>
+                     <frontend_type>text</frontend_type>
+                     <sort_order>25</sort_order>
 -                    <show_in_default>1</show_in_default>
 -                    <show_in_website>1</show_in_website>
 -                    <show_in_store>1</show_in_store>
--                    <fields>
--                        <allow_symlink translate="label comment">
--                            <label>Allow Symlinks</label>
--                            <frontend_type>select</frontend_type>
--                            <source_model>adminhtml/system_config_source_yesno</source_model>
--                            <sort_order>10</sort_order>
++                    <show_in_default>0</show_in_default>
++                    <show_in_website>0</show_in_website>
++                    <show_in_store>0</show_in_store>
+                     <fields>
+                         <allow_symlink translate="label comment">
+                             <label>Allow Symlinks</label>
+                             <frontend_type>select</frontend_type>
+                             <source_model>adminhtml/system_config_source_yesno</source_model>
++                            <backend_model>adminhtml/system_config_backend_symlink</backend_model>
+                             <sort_order>10</sort_order>
 -                            <show_in_default>1</show_in_default>
 -                            <show_in_website>1</show_in_website>
 -                            <show_in_store>1</show_in_store>
--                            <comment>Warning! Enabling this feature is not recommended on production environments because it represents a potential security risk.</comment>
--                        </allow_symlink>
--                    </fields>
--                </template>
-                 <translate_inline translate="label">
-                     <label>Translate Inline</label>
-                     <frontend_type>text</frontend_type>
-@@ -819,6 +822,25 @@
-             <show_in_website>1</show_in_website>
-             <show_in_store>1</show_in_store>
-             <groups>
-+                <csrf translate="label" module="core">
-+                    <label>CSRF protection</label>
-+                    <frontend_type>text</frontend_type>
-+                    <sort_order>0</sort_order>
-+                    <show_in_default>1</show_in_default>
-+                    <show_in_website>1</show_in_website>
-+                    <show_in_store>1</show_in_store>
-+                    <fields>
-+                        <use_form_key translate="label">
-+                            <label>Add Secret Key To Url</label>
-+                            <frontend_type>select</frontend_type>
-+                            <source_model>adminhtml/system_config_source_yesno</source_model>
-+                            <sort_order>10</sort_order>
-+                            <show_in_default>1</show_in_default>
-+                            <show_in_website>1</show_in_website>
-+                            <show_in_store>1</show_in_store>
-+                        </use_form_key>
-+                    </fields>
-+                </csrf>
-                 <smtp translate="label">
-                     <label>Mail Sending Settings</label>
-                     <frontend_type>text</frontend_type>
++                            <show_in_default>0</show_in_default>
++                            <show_in_website>0</show_in_website>
++                            <show_in_store>0</show_in_store>
+                             <comment>Warning! Enabling this feature is not recommended on production environments because it represents a potential security risk.</comment>
+                         </allow_symlink>
+                     </fields>
+diff --git app/code/core/Mage/Core/sql/core_setup/upgrade-1.6.0.2.1.1-1.6.0.2.1.2.php app/code/core/Mage/Core/sql/core_setup/upgrade-1.6.0.2.1.1-1.6.0.2.1.2.php
+new file mode 100644
+index 0000000..de85ba3
+--- /dev/null
++++ app/code/core/Mage/Core/sql/core_setup/upgrade-1.6.0.2.1.1-1.6.0.2.1.2.php
+@@ -0,0 +1,40 @@
++<?php
++/**
++ * Magento
++ *
++ * NOTICE OF LICENSE
++ *
++ * This source file is subject to the Open Software License (OSL 3.0)
++ * that is bundled with this package in the file LICENSE.txt.
++ * It is also available through the world-wide-web at this URL:
++ * http://opensource.org/licenses/osl-3.0.php
++ * If you did not receive a copy of the license and are unable to
++ * obtain it through the world-wide-web, please send an email
++ * to license@magentocommerce.com so we can send you a copy immediately.
++ *
++ * DISCLAIMER
++ *
++ * Do not edit or add to this file if you wish to upgrade Magento to newer
++ * versions in the future. If you wish to customize Magento for your
++ * needs please refer to http://www.magentocommerce.com for more information.
++ *
++ * @category    Mage
++ * @package     Mage_Core
++ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
++ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
++ */
++
++/* @var $installer Mage_Core_Model_Resource_Setup */
++$installer = $this;
++
++$installer->startSetup();
++$connection = $installer->getConnection();
++
++$connection->delete(
++    $this->getTable('core_config_data'),
++    $connection->prepareSqlCondition('path', array(
++        'like' => 'dev/template/allow_symlink'
++    ))
++);
++
++$installer->endSetup();
 diff --git app/code/core/Mage/Customer/Model/Session.php app/code/core/Mage/Customer/Model/Session.php
-index 4610c07..4396777 100644
+index 4610c07..db14395 100644
 --- app/code/core/Mage/Customer/Model/Session.php
 +++ app/code/core/Mage/Customer/Model/Session.php
-@@ -222,6 +222,8 @@ public function login($username, $password)
+@@ -213,7 +213,6 @@ class Mage_Customer_Model_Session extends Mage_Core_Model_Session_Abstract
+ 
+         if ($customer->authenticate($username, $password)) {
+             $this->setCustomerAsLoggedIn($customer);
+-            $this->renewSession();
+             return true;
+         }
+         return false;
+@@ -222,6 +221,8 @@ class Mage_Customer_Model_Session extends Mage_Core_Model_Session_Abstract
      public function setCustomerAsLoggedIn($customer)
      {
          $this->setCustomer($customer);
@@ -694,7 +804,7 @@ index 4610c07..4396777 100644
          Mage::dispatchEvent('customer_login', array('customer'=>$customer));
          return $this;
      }
-@@ -307,6 +309,7 @@ protected function _logout()
+@@ -307,6 +308,7 @@ class Mage_Customer_Model_Session extends Mage_Core_Model_Session_Abstract
          $this->setId(null);
          $this->setCustomerGroupId(Mage_Customer_Model_Group::NOT_LOGGED_IN_ID);
          $this->getCookie()->delete($this->getSessionName());
@@ -702,11 +812,31 @@ index 4610c07..4396777 100644
          return $this;
      }
  
+diff --git app/code/core/Mage/Customer/controllers/AccountController.php app/code/core/Mage/Customer/controllers/AccountController.php
+index 7361168..fde4e85 100644
+--- app/code/core/Mage/Customer/controllers/AccountController.php
++++ app/code/core/Mage/Customer/controllers/AccountController.php
+@@ -340,7 +340,6 @@ class Mage_Customer_AccountController extends Mage_Core_Controller_Front_Action
+             $url = $this->_getUrl('*/*/index', array('_secure' => true));
+         } else {
+             $session->setCustomerAsLoggedIn($customer);
+-            $session->renewSession();
+             $url = $this->_welcomeCustomer($customer);
+         }
+         $this->_redirectSuccess($url);
+@@ -608,7 +607,6 @@ class Mage_Customer_AccountController extends Mage_Core_Controller_Front_Action
+                     throw new Exception($this->__('Failed to confirm customer account.'));
+                 }
+ 
+-                $session->renewSession();
+                 // log in and send greeting email, then die happy
+                 $session->setCustomerAsLoggedIn($customer);
+                 $successUrl = $this->_welcomeCustomer($customer, true);
 diff --git app/code/core/Mage/Dataflow/Model/Convert/Adapter/Zend/Cache.php app/code/core/Mage/Dataflow/Model/Convert/Adapter/Zend/Cache.php
 index 957af7b..9b482f9 100644
 --- app/code/core/Mage/Dataflow/Model/Convert/Adapter/Zend/Cache.php
 +++ app/code/core/Mage/Dataflow/Model/Convert/Adapter/Zend/Cache.php
-@@ -40,6 +40,9 @@ public function getResource()
+@@ -40,6 +40,9 @@ class Mage_Dataflow_Model_Convert_Adapter_Zend_Cache extends Mage_Dataflow_Model
          if (!$this->_resource) {
              $this->_resource = Zend_Cache::factory($this->getVar('frontend', 'Core'), $this->getVar('backend', 'File'));
          }
@@ -720,7 +850,7 @@ diff --git app/code/core/Mage/Dataflow/Model/Convert/Container/Abstract.php app/
 index 39bf5b2..7fc8e86 100644
 --- app/code/core/Mage/Dataflow/Model/Convert/Container/Abstract.php
 +++ app/code/core/Mage/Dataflow/Model/Convert/Container/Abstract.php
-@@ -47,6 +47,18 @@
+@@ -47,6 +47,18 @@ abstract class Mage_Dataflow_Model_Convert_Container_Abstract
  
      protected $_position;
  
@@ -739,7 +869,7 @@ index 39bf5b2..7fc8e86 100644
      public function getVar($key, $default=null)
      {
          if (!isset($this->_vars[$key]) || (!is_array($this->_vars[$key]) && strlen($this->_vars[$key]) == 0)) {
-@@ -102,13 +114,45 @@ public function getData()
+@@ -102,13 +114,45 @@ abstract class Mage_Dataflow_Model_Convert_Container_Abstract
  
      public function setData($data)
      {
@@ -788,7 +918,7 @@ index 39bf5b2..7fc8e86 100644
      public function validateDataString($data=null)
      {
          if (is_null($data)) {
-@@ -140,7 +184,10 @@ public function validateDataGrid($data=null)
+@@ -140,7 +184,10 @@ abstract class Mage_Dataflow_Model_Convert_Container_Abstract
              if (count($data)==0) {
                  return true;
              }
@@ -801,42 +931,25 @@ index 39bf5b2..7fc8e86 100644
          return true;
      }
 diff --git app/code/core/Mage/Dataflow/Model/Convert/Parser/Csv.php app/code/core/Mage/Dataflow/Model/Convert/Parser/Csv.php
-index 750bb2d..000baea 100644
+index 750bb2d..0a98700 100644
 --- app/code/core/Mage/Dataflow/Model/Convert/Parser/Csv.php
 +++ app/code/core/Mage/Dataflow/Model/Convert/Parser/Csv.php
-@@ -62,13 +62,15 @@ public function parse()
-             $adapter = Mage::getModel($adapterName);
-         }
-         catch (Exception $e) {
--            $message = Mage::helper('dataflow')->__('Declared adapter %s was not found.', $adapterName);
-+            $message = Mage::helper('dataflow')
-+                ->__('Declared adapter %s was not found.', $adapterName);
-             $this->addException($message, Mage_Dataflow_Model_Convert_Exception::FATAL);
-             return $this;
+@@ -77,8 +77,8 @@ class Mage_Dataflow_Model_Convert_Parser_Csv extends Mage_Dataflow_Model_Convert
+         $batchIoAdapter = $this->getBatchModel()->getIoAdapter();
+ 
+         if (Mage::app()->getRequest()->getParam('files')) {
+-            $file = Mage::app()->getConfig()->getTempVarDir().'/import/'
+-                . urldecode(Mage::app()->getRequest()->getParam('files'));
++            $file = Mage::app()->getConfig()->getTempVarDir() . '/import/'
++                . str_replace('../', '', urldecode(Mage::app()->getRequest()->getParam('files')));
+             $this->_copy($file);
          }
  
-         if (!is_callable(array($adapter, $adapterMethod))) {
--            $message = Mage::helper('dataflow')->__('Method "%s" not defined in adapter %s.', $adapterMethod, $adapterName);
-+            $message = Mage::helper('dataflow')
-+                ->__('Method "%s" not defined in adapter %s.', $adapterMethod, $adapterName);
-             $this->addException($message, Mage_Dataflow_Model_Convert_Exception::FATAL);
-             return $this;
-         }
 diff --git app/code/core/Mage/Dataflow/Model/Convert/Parser/Xml/Excel.php app/code/core/Mage/Dataflow/Model/Convert/Parser/Xml/Excel.php
-index 5604259..10b79de 100644
+index 5604259..b297551 100644
 --- app/code/core/Mage/Dataflow/Model/Convert/Parser/Xml/Excel.php
 +++ app/code/core/Mage/Dataflow/Model/Convert/Parser/Xml/Excel.php
-@@ -69,7 +69,8 @@ public function parse()
-         }
- 
-         if (!is_callable(array($adapter, $adapterMethod))) {
--            $message = Mage::helper('dataflow')->__('Method "%s" was not defined in adapter %s.', $adapterMethod, $adapterName);
-+            $message = Mage::helper('dataflow')
-+                ->__('Method "%s" was not defined in adapter %s.', $adapterMethod, $adapterName);
-             $this->addException($message, Mage_Dataflow_Model_Convert_Exception::FATAL);
-             return $this;
-         }
-@@ -78,8 +79,8 @@ public function parse()
+@@ -78,8 +78,8 @@ class Mage_Dataflow_Model_Convert_Parser_Xml_Excel extends Mage_Dataflow_Model_C
          $batchIoAdapter = $this->getBatchModel()->getIoAdapter();
  
          if (Mage::app()->getRequest()->getParam('files')) {
@@ -851,7 +964,7 @@ diff --git app/code/core/Mage/ImportExport/Model/Import/Uploader.php app/code/co
 index e040261..af5a13f 100644
 --- app/code/core/Mage/ImportExport/Model/Import/Uploader.php
 +++ app/code/core/Mage/ImportExport/Model/Import/Uploader.php
-@@ -61,6 +61,11 @@ public function init()
+@@ -61,6 +61,11 @@ class Mage_ImportExport_Model_Import_Uploader extends Mage_Core_Model_File_Uploa
          $this->setAllowedExtensions(array_keys($this->_allowedMimeTypes));
          $this->addValidateCallback('catalog_product_image',
                  Mage::helper('catalog/image'), 'validateUploadFile');
@@ -867,7 +980,7 @@ diff --git app/code/core/Mage/Sales/Model/Quote/Item.php app/code/core/Mage/Sale
 index c809267..f3fab7b 100644
 --- app/code/core/Mage/Sales/Model/Quote/Item.php
 +++ app/code/core/Mage/Sales/Model/Quote/Item.php
-@@ -502,8 +502,9 @@ public function compare($item)
+@@ -502,8 +502,9 @@ class Mage_Sales_Model_Quote_Item extends Mage_Sales_Model_Quote_Item_Abstract
                          /** @var Unserialize_Parser $parser */
                          $parser = Mage::helper('core/unserializeArray');
  
@@ -883,7 +996,7 @@ diff --git app/code/core/Mage/Widget/Model/Widget/Instance.php app/code/core/Mag
 index b5e316c..09ddc9d 100644
 --- app/code/core/Mage/Widget/Model/Widget/Instance.php
 +++ app/code/core/Mage/Widget/Model/Widget/Instance.php
-@@ -347,7 +347,11 @@ public function getStoreIds()
+@@ -347,7 +347,11 @@ class Mage_Widget_Model_Widget_Instance extends Mage_Core_Model_Abstract
      public function getWidgetParameters()
      {
          if (is_string($this->getData('widget_parameters'))) {
@@ -900,7 +1013,7 @@ diff --git app/code/core/Mage/XmlConnect/Helper/Image.php app/code/core/Mage/Xml
 index c644782..931ce38 100644
 --- app/code/core/Mage/XmlConnect/Helper/Image.php
 +++ app/code/core/Mage/XmlConnect/Helper/Image.php
-@@ -92,6 +92,11 @@ public function handleUpload($field)
+@@ -92,6 +92,11 @@ class Mage_XmlConnect_Helper_Image extends Mage_Core_Helper_Abstract
              $uploader = Mage::getModel('core/file_uploader', $field);
              $uploader->setAllowedExtensions(array('jpg', 'jpeg', 'gif', 'png'));
              $uploader->setAllowRenameFiles(true);
@@ -912,23 +1025,35 @@ index c644782..931ce38 100644
              $uploader->save($uploadDir);
              $uploadedFilename = $uploader->getUploadedFileName();
              $uploadedFilename = $this->_getResizedFilename($field, $uploadedFilename, true);
+diff --git app/code/core/Mage/XmlConnect/controllers/Adminhtml/MobileController.php app/code/core/Mage/XmlConnect/controllers/Adminhtml/MobileController.php
+index f054be1..d5b7967 100644
+--- app/code/core/Mage/XmlConnect/controllers/Adminhtml/MobileController.php
++++ app/code/core/Mage/XmlConnect/controllers/Adminhtml/MobileController.php
+@@ -539,7 +539,7 @@ class Mage_XmlConnect_Adminhtml_MobileController extends Mage_Adminhtml_Controll
+                 $result = $themesHelper->deleteTheme($themeId);
+                 if ($result) {
+                     $response = array(
+-                        'message'   => $this->__('Theme has been delete.'),
++                        'message'   => $this->__('Theme has been deleted.'),
+                         'themes'    => $themesHelper->getAllThemesArray(true),
+                         'themeSelector' => $themesHelper->getThemesSelector(),
+                         'selectedTheme' => $themesHelper->getDefaultThemeName()
 diff --git app/design/adminhtml/default/default/layout/main.xml app/design/adminhtml/default/default/layout/main.xml
-index 99f2096..0d2a01b 100644
+index 99f2096..d6330c4 100644
 --- app/design/adminhtml/default/default/layout/main.xml
 +++ app/design/adminhtml/default/default/layout/main.xml
-@@ -119,7 +119,8 @@ Default layout, loads most of the pages
+@@ -119,6 +119,8 @@ Default layout, loads most of the pages
                  <block type="adminhtml/cache_notifications" name="cache_notifications" template="system/cache/notifications.phtml"></block>
                  <block type="adminhtml/notification_survey" name="notification_survey" template="notification/survey.phtml"/>
                  <block type="adminhtml/notification_security" name="notification_security" as="notification_security" template="notification/security.phtml"></block>
--            </block>
-+                <block type="adminhtml/checkout_formkey" name="checkout_formkey" as="checkout_formkey" template="notification/formkey.phtml"/></block>
++                <block type="adminhtml/checkout_formkey" name="checkout_formkey" as="checkout_formkey" template="notification/formkey.phtml"/>
 +                <block type="adminhtml/notification_symlink" name="notification_symlink" template="notification/symlink.phtml"/>
+             </block>
              <block type="adminhtml/widget_breadcrumbs" name="breadcrumbs" as="breadcrumbs"></block>
  
-             <!--<update handle="formkey"/> this won't work, see the try/catch and a jammed exception in Mage_Core_Model_Layout::createBlock() -->
 diff --git app/design/adminhtml/default/default/template/notification/formkey.phtml app/design/adminhtml/default/default/template/notification/formkey.phtml
 new file mode 100644
-index 0000000..6f24620
+index 0000000..b7a78d5
 --- /dev/null
 +++ app/design/adminhtml/default/default/template/notification/formkey.phtml
 @@ -0,0 +1,38 @@
@@ -938,10 +1063,10 @@ index 0000000..6f24620
 + *
 + * NOTICE OF LICENSE
 + *
-+ * This source file is subject to the Open Software License (OSL 3.0)
-+ * that is bundled with this package in the file LICENSE.txt.
++ * This source file is subject to the Academic Free License (AFL 3.0)
++ * that is bundled with this package in the file LICENSE_AFL.txt.
 + * It is also available through the world-wide-web at this URL:
-+ * http://opensource.org/licenses/osl-3.0.php
++ * http://opensource.org/licenses/afl-3.0.php
 + * If you did not receive a copy of the license and are unable to
 + * obtain it through the world-wide-web, please send an email
 + * to license@magentocommerce.com so we can send you a copy immediately.
@@ -952,10 +1077,10 @@ index 0000000..6f24620
 + * versions in the future. If you wish to customize Magento for your
 + * needs please refer to http://www.magentocommerce.com for more information.
 + *
-+ * @category    Mage
-+ * @package     Mage_Adminhtml
++ * @category    design
++ * @package     default_default
 + * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
-+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
++ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 + */
 +/**
 + * @see Mage_Adminhtml_Block_Checkout_Formkey
@@ -972,7 +1097,7 @@ index 0000000..6f24620
 +<?php endif; ?>
 diff --git app/design/adminhtml/default/default/template/notification/symlink.phtml app/design/adminhtml/default/default/template/notification/symlink.phtml
 new file mode 100644
-index 0000000..711ff19
+index 0000000..427be87
 --- /dev/null
 +++ app/design/adminhtml/default/default/template/notification/symlink.phtml
 @@ -0,0 +1,34 @@
@@ -982,10 +1107,10 @@ index 0000000..711ff19
 + *
 + * NOTICE OF LICENSE
 + *
-+ * This source file is subject to the Open Software License (OSL 3.0)
-+ * that is bundled with this package in the file LICENSE.txt.
++ * This source file is subject to the Academic Free License (AFL 3.0)
++ * that is bundled with this package in the file LICENSE_AFL.txt.
 + * It is also available through the world-wide-web at this URL:
-+ * http://opensource.org/licenses/osl-3.0.php
++ * http://opensource.org/licenses/afl-3.0.php
 + * If you did not receive a copy of the license and are unable to
 + * obtain it through the world-wide-web, please send an email
 + * to license@magentocommerce.com so we can send you a copy immediately.
@@ -996,10 +1121,10 @@ index 0000000..711ff19
 + * versions in the future. If you wish to customize Magento for your
 + * needs please refer to http://www.magentocommerce.com for more information.
 + *
-+ * @category    Mage
-+ * @package     Mage_Adminhtml
++ * @category    design
++ * @package     default_default
 + * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
-+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
++ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 + */
 +/**
 + * @see Mage_Adminhtml_Block_Notification_Symlink
@@ -1010,6 +1135,19 @@ index 0000000..711ff19
 +        <?php echo $this->helper('adminhtml')->__('Symlinks are enabled. This may expose security risks. We strongly recommend to disable them.')?>
 +    </div>
 +<?php endif; ?>
+diff --git app/design/adminhtml/default/default/template/oauth/authorize/head-simple.phtml app/design/adminhtml/default/default/template/oauth/authorize/head-simple.phtml
+index b284141..9cade9e 100644
+--- app/design/adminhtml/default/default/template/oauth/authorize/head-simple.phtml
++++ app/design/adminhtml/default/default/template/oauth/authorize/head-simple.phtml
+@@ -42,7 +42,7 @@
+     var BLANK_URL = '<?php echo $this->getJsUrl() ?>blank.html';
+     var BLANK_IMG = '<?php echo $this->getJsUrl() ?>spacer.gif';
+     var BASE_URL = '<?php echo $this->getUrl('*') ?>';
+-    var SKIN_URL = '<?php echo $this->getSkinUrl() ?>';
++    var SKIN_URL = '<?php echo $this->jsQuoteEscape($this->getSkinUrl()) ?>';
+     var FORM_KEY = '<?php echo $this->getFormKey() ?>';
+ //]]>
+ </script>
 diff --git app/design/adminhtml/default/default/template/page/head.phtml app/design/adminhtml/default/default/template/page/head.phtml
 index ef6371f..3f944dc 100644
 --- app/design/adminhtml/default/default/template/page/head.phtml
@@ -1035,6 +1173,16 @@ index b8c4e69..12c8dff 100644
          </form>
          <?php endif; ?>
          <script type="text/javascript">
+diff --git app/design/frontend/base/default/template/checkout/multishipping/addresses.phtml app/design/frontend/base/default/template/checkout/multishipping/addresses.phtml
+index 2b8d321..10b1c18 100644
+--- app/design/frontend/base/default/template/checkout/multishipping/addresses.phtml
++++ app/design/frontend/base/default/template/checkout/multishipping/addresses.phtml
+@@ -78,4 +78,5 @@
+             <button type="submit" title="<?php echo $this->__('Continue to Shipping Information') ?>" class="button<?php if ($this->isContinueDisabled()):?> disabled<?php endif; ?>" onclick="$('can_continue_flag').value=1"<?php if ($this->isContinueDisabled()):?> disabled="disabled"<?php endif; ?>><span><span><?php echo $this->__('Continue to Shipping Information') ?></span></span></button>
+         </div>
+     </div>
++    <?php echo $this->getBlockHtml("formkey") ?>
+ </form>
 diff --git app/design/frontend/base/default/template/checkout/multishipping/billing.phtml app/design/frontend/base/default/template/checkout/multishipping/billing.phtml
 index 2494c611..16020d1 100644
 --- app/design/frontend/base/default/template/checkout/multishipping/billing.phtml
@@ -1071,17 +1219,17 @@ index 3ca41d0..9decb47 100644
  </form>
  <script type="text/javascript">
 diff --git app/design/frontend/base/default/template/checkout/onepage/payment.phtml app/design/frontend/base/default/template/checkout/onepage/payment.phtml
-index dfb4d2d..05af5b5 100644
+index dfb4d2d..4ef47f4 100644
 --- app/design/frontend/base/default/template/checkout/onepage/payment.phtml
 +++ app/design/frontend/base/default/template/checkout/onepage/payment.phtml
-@@ -35,6 +35,7 @@
- <form action="" id="co-payment-form">
+@@ -36,6 +36,7 @@
      <fieldset>
          <?php echo $this->getChildHtml('methods') ?>
-+        <?php echo $this->getBlockHtml('formkey') ?>
      </fieldset>
++    <?php echo $this->getBlockHtml('formkey') ?>
  </form>
  <div class="tool-tip" id="payment-tool-tip" style="display:none;">
+     <div class="btn-close"><a href="#" id="payment-tool-tip-close" title="<?php echo $this->__('Close') ?>"><?php echo $this->__('Close') ?></a></div>
 diff --git app/design/frontend/base/default/template/checkout/onepage/shipping.phtml app/design/frontend/base/default/template/checkout/onepage/shipping.phtml
 index 33c0694..e58d977 100644
 --- app/design/frontend/base/default/template/checkout/onepage/shipping.phtml
@@ -1133,15 +1281,15 @@ index ebba59a..809d5ba 100644
              <locale>
                  <code>en_US</code>
 diff --git app/locale/en_US/Mage_Adminhtml.csv app/locale/en_US/Mage_Adminhtml.csv
-index 52874d6..4cf688b 100644
+index 52874d6..b7ad249 100644
 --- app/locale/en_US/Mage_Adminhtml.csv
 +++ app/locale/en_US/Mage_Adminhtml.csv
 @@ -1182,3 +1182,5 @@
  "to","to"
  "website(%s) scope","website(%s) scope"
  "{{base_url}} is not recommended to use in a production environment to declare the Base Unsecure URL / Base Secure URL. It is highly recommended to change this value in your Magento <a href=""%s"">configuration</a>.","{{base_url}} is not recommended to use in a production environment to declare the Base Unsecure URL / Base Secure URL. It is highly recommended to change this value in your Magento <a href=""%s"">configuration</a>."
-+"Symlinks are enabled. This may expose security risks. We strongly recommend to disable them.","Symlinks are enabled. This may expose security risks. We strongly recommend to disable them."
 +"You did not sign in correctly or your account is temporarily disabled.","You did not sign in correctly or your account is temporarily disabled."
++"Symlinks are enabled. This may expose security risks. We strongly recommend to disable them.","Symlinks are enabled. This may expose security risks. We strongly recommend to disable them."
 diff --git app/locale/en_US/Mage_Core.csv app/locale/en_US/Mage_Core.csv
 index 115c36f..5fa4667 100644
 --- app/locale/en_US/Mage_Core.csv
@@ -1160,11 +1308,24 @@ index 7169fae..50bac5f 100644
  "minute","minute"
  "minutes","minutes"
 +"Backend name "Static" not supported.","Backend name "Static" not supported."
+diff --git app/locale/en_US/Mage_XmlConnect.csv app/locale/en_US/Mage_XmlConnect.csv
+index df89016..5c721fa 100644
+--- app/locale/en_US/Mage_XmlConnect.csv
++++ app/locale/en_US/Mage_XmlConnect.csv
+@@ -571,7 +571,7 @@
+ "The store credit payment has been removed from shopping cart.","The store credit payment has been removed from shopping cart."
+ "Theme configurations are successfully reset.","Theme configurations are successfully reset."
+ "Theme has been created.","Theme has been created."
+-"Theme has been delete.","Theme has been delete."
++"Theme has been deleted.","Theme has been deleted."
+ "Theme label can\'t be empty","Theme label can\'t be empty"
+ "Theme label:","Theme label:"
+ "Theme name is not set.","Theme name is not set."
 diff --git downloader/Maged/Connect.php downloader/Maged/Connect.php
 index 95bc1e4..ee55176 100644
 --- downloader/Maged/Connect.php
 +++ downloader/Maged/Connect.php
-@@ -396,7 +396,9 @@ public function runHtmlConsole($runParams)
+@@ -396,7 +396,9 @@ class Maged_Connect
       */
      protected function _consoleHeader() {
          if (!$this->_consoleStarted) {
@@ -1196,7 +1357,7 @@ diff --git downloader/Maged/Controller.php downloader/Maged/Controller.php
 index 88839f5..7dd056c 100755
 --- downloader/Maged/Controller.php
 +++ downloader/Maged/Controller.php
-@@ -405,7 +405,7 @@ public function connectInstallPackageUploadAction()
+@@ -405,7 +405,7 @@ final class Maged_Controller
       */
      public function cleanCacheAction()
      {
@@ -1205,7 +1366,7 @@ index 88839f5..7dd056c 100755
          echo json_encode($result);
      }
  
-@@ -928,25 +928,36 @@ public function endInstall()
+@@ -928,25 +928,36 @@ final class Maged_Controller
          }
      }
  
@@ -1259,7 +1420,7 @@ diff --git downloader/Maged/Model/Session.php downloader/Maged/Model/Session.php
 index ce9b584..80f9d41 100644
 --- downloader/Maged/Model/Session.php
 +++ downloader/Maged/Model/Session.php
-@@ -82,6 +82,20 @@ public function set($key, $value)
+@@ -82,6 +82,20 @@ class Maged_Model_Session extends Maged_Model
      }
  
      /**
@@ -1280,7 +1441,7 @@ index ce9b584..80f9d41 100644
       * Authentication to downloader
       */
      public function authenticate()
-@@ -234,4 +248,24 @@ public function getFormKey()
+@@ -234,4 +248,24 @@ class Maged_Model_Session extends Maged_Model
          }
          return $this->get('_form_key');
      }
